@@ -1,5 +1,5 @@
 # Drone_Control repository
-This repository contains codes for the following dissertation: "Automatic Drone Control to a Moving Target Point"     
+This repository contains source codes for the following dissertation: "Automatic Drone Control to a Moving Target Point"     
 credited by **Lee, Ho Jae and Yeo Seung Won**    
    
 Here we can think the moving target as a delivery truck.
