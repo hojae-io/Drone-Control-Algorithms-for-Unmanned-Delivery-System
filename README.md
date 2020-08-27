@@ -2,7 +2,7 @@
 This repository contains source codes for the following dissertation: "Automatic Drone Control to a Moving Target Point"     
 credited by **Lee, Ho Jae and Yeo Seung Won**    
    
-Here we can think the moving target as a delivery truck.
+Here we can think of the waypoints as delivery destinations and the moving target as a delivery truck.
 
 ### GPS.py
 > Move the drone to the moving target by only GPS-based control
