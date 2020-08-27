@@ -3,6 +3,7 @@
 # MAVSDK
 import asyncio
 from mavsdk import System
+from mavsdk.mission import (MissionItem, MissionPlan)
 from mavsdk.offboard import (OffboardError, PositionNedYaw)
 
 # ROS python API
