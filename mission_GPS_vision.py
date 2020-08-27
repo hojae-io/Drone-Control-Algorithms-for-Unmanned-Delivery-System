@@ -9,7 +9,7 @@ from mavsdk.offboard import (OffboardError, PositionNedYaw)
 import rospy
 
 # import a message from Raspberry pi CAMERA
-# Message name: /target_msg
+# Message name: /Target_coord_msg
 from targetDetection_topic.msg import TargetPosition
 # import a message from Raspberry pi GPS
 # Message name: /Target_GPS_msg
