@@ -24,7 +24,7 @@ class Controller:
         target_gps.latitude = msg.latitude
         target_gps.longitude = msg.longitude
 
-# Execution: python3 test_0824.py
+# Execution: python3
 async def run():
     drone = System()
     await drone.connect(system_address="serial:///dev/ttyUSB0")
