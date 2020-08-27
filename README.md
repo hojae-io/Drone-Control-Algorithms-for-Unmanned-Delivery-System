@@ -7,7 +7,7 @@ Here we can think of the waypoints as delivery destinations and the moving targe
 ### GPS.py
 > Move the drone to the moving target by only GPS-based control
 
-## mission_GPS.py
+### mission_GPS.py
 > Move the drone to several waypoints and finish at the stationary target
 
 ### mission_GPS_vision.py 
