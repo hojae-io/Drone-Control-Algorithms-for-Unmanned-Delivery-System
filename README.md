@@ -1,5 +1,5 @@
 # Drone_Control repository
-This repository contains code for the following dissertation: "Automatic Drone Control to a Moving Target Point"     
+This repository contains codes for the following dissertation: "Automatic Drone Control to a Moving Target Point"     
 credited by Lee, Ho Jae and Yeo Seung Won
 
 ### mission_GPS_vision.py 
