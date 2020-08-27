@@ -12,3 +12,9 @@ Here we can think of the waypoints as delivery destinations and the moving targe
 
 ### mission_GPS_vision.py 
 > Move the drone to several waypoints and come back to the moving target with GPS-based and Vision-based Control
+
+### GPS_topic
+> This directory contains source codes for a ROS node at the target. This sends GPS information of the target
+
+### targetDetection_topic
+> This directory contains source codes for a ROS node at the Drone's RaspberryPi Camera. This sends coordinate information to which the drone should move.
