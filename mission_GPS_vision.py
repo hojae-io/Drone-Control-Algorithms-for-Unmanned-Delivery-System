@@ -116,7 +116,7 @@ async def run():
     ##########################################
     while True:
         # if the target is not within the camera yet
-        if target_coord.conf < 0.9:
+        if not target_coord.is_detected:
             await drone.action.goto_location(target_gps.latitude, target_gps.longitude, flying_alt, 0)
         
         # if the target is detected within the camera, chanage to offboard mode to finetune the drone's position
