@@ -8,8 +8,6 @@
 using namespace std;
 using namespace cv;
 
-void find_HSign();
-
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "topic_publisher");
