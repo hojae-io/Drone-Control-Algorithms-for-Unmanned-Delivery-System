@@ -3,6 +3,7 @@
 
 #include "opencv2/opencv.hpp"
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 using namespace cv;
@@ -19,8 +20,8 @@ int main(int argc, char **argv)
 
 	targetDetection_topic::TargetPosition msg;
 
-    VideoCapture cap(0);
-	Mat templ = imread("book.jpg", IMREAD_GRAYSCALE);
+	VideoCapture cap(0);
+	Mat templ = imread("LandingTarget.jpg", IMREAD_GRAYSCALE);
 
 	if (!cap.isOpened() || templ.empty()) {
 		cerr << "Camera or Template image open failed" << endl;
@@ -30,7 +31,7 @@ int main(int argc, char **argv)
 	cout << "Frame width: " << cvRound(cap.get(CAP_PROP_FRAME_WIDTH)) << endl;
 	cout << "Frame height: " << cvRound(cap.get(CAP_PROP_FRAME_HEIGHT)) << endl;
 	cout << "Template Size: " << templ.size << endl;
-	
+
 
 	int w = cvRound(cap.get(CAP_PROP_FRAME_WIDTH));
 	int h = cvRound(cap.get(CAP_PROP_FRAME_HEIGHT));
@@ -69,6 +70,15 @@ int main(int argc, char **argv)
 
 		Mat dst;
 		drawMatches(templ, keypoints_templ, img, keypoints_img, good_matches, dst, Scalar::all(-1), Scalar::all(-1), vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+		
+		// Whether the target is detected in Camera
+		bool is_detected;
+		if (good_matches.size() < 50) {
+			is_detected = false;
+		}
+		else {
+			is_detected = true;
+		}
 
 		vector<Point2f> pts1, pts2;
 		for (size_t i = 0; i < good_matches.size(); i++) {
@@ -86,25 +96,48 @@ int main(int argc, char **argv)
 		perspectiveTransform(corners1, corners2, H);
 
 		vector<Point> corners_dst;
+		float del_east = 0.0;
+		float del_north = 0.0;
+
 		int midPointX = 0;
 		int midPointY = 0;
+
 		for (Point2f pt : corners2) {
 			corners_dst.push_back(Point(cvRound(pt.x + templ.cols), cvRound(pt.y)));
-			midPointX += cvRound(pt.x + templ.cols);
+			midPointX += cvRound(pt.x);
 			midPointY += cvRound(pt.y);
 		}
-        
-        msg.x_coord = midPointX/4;
-        msg.y_coord = midPointY/4;
+		// midPoint of H_sign
+		midPointX = midPointX / 4;
+		midPointY = midPointY / 4;
 
-        ROS_INFO("send msg = %d", msg.stamp.sec);
-        ROS_INFO("send msg = %d", msg.stamp.nsec);
-        ROS_INFO("send msg = %d", msg.data);
+		///////////////////////////////////
+		///// Find del_east, del_north ////
+		///////////////////////////////////
+		
+		// H_sign's height = 1m
+		Point2f pt1 = corners_dst[0];
+		Point2f pt4 = corners_dst[3];
+		
+		float pixel_dist = sqrt(pow(pt1.x - pt4.x, 2) + pow(pt1.y - pt4.y, 2));
+		float scale = 1.0 / pixel_dist;  //scale: 1 pixel = ? meter
 
-        target_topic_pub.publish(msg);
+		// Considering Camera fronts North
+		del_east = (midPointX - w / 2) * scale;
+		del_north = (h / 2 - midPointY) * scale;
 
-		// cout << "x-coord: " << midPointX/4 << endl;
-		// cout << "y-coord: " << midPointY/4 << endl;
+		// Rotate the coordinates
+		Point2f n_dir = pt1 - pt4;
+		float theta = acos(-n_dir.y / sqrt(pow(n_dir.x, 2) + pow(n_dir.y, 2)));
+		
+		del_east = cos(theta) * del_east + sin(theta) * del_north;
+		del_north = -sin(theta) * del_east + cos(theta) * del_north;
+
+		msg.del_east = del_east;
+		msg.del_north = del_north;
+		msg.is_detected = is_detected;
+
+		target_topic_pub.publish(msg);
 
 		polylines(dst, corners_dst, true, Scalar(0, 255, 0), 2, LINE_AA);
 
@@ -115,10 +148,7 @@ int main(int argc, char **argv)
 		if (waitKey(10) == 27) break;
 	}
 
-    loop_rate.sleep();
-    
+	loop_rate.sleep();
+
 	return 0;
 }
-
-
-
