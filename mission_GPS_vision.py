@@ -28,9 +28,9 @@ class Controller:
     # Callbacks
     def Coord_callback(self, msg):
         global target_coord
-        target_coord.x_coord = msg.x_coord
-        target_coord.y_coord = msg.y_coord
-        target_coord.conf = msg.conf        # confidence whether object is detected in the camera
+        target_coord.del_east = msg.del_east
+        target_coord.del_north = msg.del_north
+        target_coord.is_detected = msg.is_detected        # Whether the target is detected in the camera
 
     def GPS_callback(self, msg):
         global target_gps
@@ -134,8 +134,8 @@ async def run():
                     await drone.action.disarm()
                     return
             else:
-                print(f"-- Go {target_coord.x_coord}m North, {target_coord.y_coord}m East, within local coordinate system")
-                await drone.offboard.set_position_ned(PositionNedYaw(target_coord.x_coord, target_coord.y_coord, 0.0, 0.0))
+                print(f"-- Go {target_coord.del_north}m North, {target_coord.del_east}m East, within local coordinate system")
+                await drone.offboard.set_position_ned(PositionNedYaw(target_coord.del_north, target_coord.del_east, 0.0, 0.0))
     
 
 async def print_mission_progress(drone):
