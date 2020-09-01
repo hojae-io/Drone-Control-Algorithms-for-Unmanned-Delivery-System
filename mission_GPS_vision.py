@@ -169,10 +169,7 @@ async def observe_is_in_air(drone, running_tasks):
 
 def main():
     rospy.init_node('SNU_drone', anonymous=True)
-
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(run())
-
+    
     cnt = Controller()
 
     rospy.Subscriber('/Target_coord_msg', TargetPosition, cnt.Coord_callback)
@@ -180,6 +177,11 @@ def main():
     
     rospy.Subscriber('/Target_GPS_msg', Target_GPS, cnt.GPS_callback)
     rospy.sleep(0.2)
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(run())
+
+    
 
 if __name__ == "__main__":
     main()
