@@ -1,4 +1,4 @@
-# Drone_Control repository
+# Drone Control Algorithms for Unmanned Delivery System repository
 This repository contains source codes for the following dissertation: "Design and Flight Control to Variable Target Points of a Drone for Unmanned Delivery Service."     
 credited by **Lee, Ho Jae and Yeo, Seung Won**    
    
